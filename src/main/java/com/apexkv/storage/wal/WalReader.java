@@ -63,8 +63,8 @@ public class WalReader implements AutoCloseable {
 
             long currentOffset = 0;
             while (currentOffset < fileSize) {
-                // Minimum header is 4B(CRC) + 8B(time) + 1B(type) + 4B(keyLen) + 4B(valLen) = 21B
-                if (fileSize - currentOffset < 21) {
+                // Minimum fixed header before key is 4B(CRC) + 8B(time) + 1B(type) + 4B(keyLen) = 17B
+                if (fileSize - currentOffset < 17) {
                     if (allowTornTail) {
                         break; // Torn write at EOF
                     } else {
@@ -72,8 +72,8 @@ public class WalReader implements AutoCloseable {
                     }
                 }
 
-                // Read header to determine record size
-                ByteBuffer headerBuf = ByteBuffer.allocate(21);
+                // Read fixed 17-byte header
+                ByteBuffer headerBuf = ByteBuffer.allocate(17);
                 channel.read(headerBuf, currentOffset);
                 headerBuf.flip();
 
@@ -81,20 +81,40 @@ public class WalReader implements AutoCloseable {
                 long timestamp = headerBuf.getLong();
                 byte typeCode = headerBuf.get();
                 int keyLen = headerBuf.getInt();
-                int valLen = headerBuf.getInt();
 
-                if (keyLen <= 0 || keyLen > 65536 || valLen > 64 * 1024 * 1024) {
-                    if (allowTornTail && currentOffset + 21 >= fileSize) {
+                if (keyLen <= 0 || keyLen > 65536) {
+                    if (allowTornTail && currentOffset + 17 >= fileSize) {
                         break;
                     }
                     throw new CorruptedWalException(
-                            String.format("Invalid key/value length in WAL: keyLen=%d, valLen=%d", keyLen, valLen),
+                            String.format("Invalid key length in WAL: keyLen=%d", keyLen),
+                            expectedCrc, -1, currentOffset);
+                }
+
+                // Check if key bytes and 4-byte value length fit within file
+                if (fileSize - currentOffset < 17 + keyLen + 4) {
+                    if (allowTornTail) {
+                        break; // Torn write at EOF
+                    } else {
+                        throw new CorruptedWalException(
+                                "Torn write before value length at offset " + currentOffset,
+                                expectedCrc, -1, currentOffset);
+                    }
+                }
+
+                ByteBuffer valLenBuf = ByteBuffer.allocate(4);
+                channel.read(valLenBuf, currentOffset + 17 + keyLen);
+                valLenBuf.flip();
+                int valLen = valLenBuf.getInt();
+
+                if (valLen > 64 * 1024 * 1024) {
+                    throw new CorruptedWalException(
+                            String.format("Invalid value length in WAL: valLen=%d", valLen),
                             expectedCrc, -1, currentOffset);
                 }
 
                 int effectiveValLen = Math.max(0, valLen);
-                int payloadSize = 8 + 1 + 4 + keyLen + 4 + effectiveValLen;
-                int totalRecordSize = 4 + payloadSize;
+                int totalRecordSize = 17 + keyLen + 4 + effectiveValLen;
 
                 if (currentOffset + totalRecordSize > fileSize) {
                     if (allowTornTail) {

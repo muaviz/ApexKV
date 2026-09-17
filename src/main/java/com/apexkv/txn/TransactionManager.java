@@ -19,11 +19,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public class TransactionManager {
     private final ApexKVEngine engine;
     private final AtomicLong nextTxnId;
+    private final AtomicLong logicalSequence;
     private final ConcurrentHashMap<String, Long> lastCommittedTimestamps;
 
     public TransactionManager(ApexKVEngine engine) {
         this.engine = Objects.requireNonNull(engine, "engine cannot be null");
         this.nextTxnId = new AtomicLong(1);
+        this.logicalSequence = new AtomicLong(1);
         this.lastCommittedTimestamps = new ConcurrentHashMap<>();
     }
 
@@ -39,7 +41,7 @@ public class TransactionManager {
      */
     public Transaction beginTransaction(IsolationLevel isolationLevel) {
         long txnId = nextTxnId.getAndIncrement();
-        long startTimestamp = System.currentTimeMillis();
+        long startTimestamp = logicalSequence.get();
         return new TransactionImpl(txnId, startTimestamp, isolationLevel, engine, this);
     }
 
@@ -81,8 +83,8 @@ public class TransactionManager {
             }
         }
 
-        // Apply mutations atomically to engine
-        long commitTimestamp = System.currentTimeMillis();
+        // Apply mutations atomically to engine with monotonic commit sequence
+        long commitTimestamp = logicalSequence.incrementAndGet();
         for (DataRecord record : writeBuffer.values()) {
             if (record.isTombstone()) {
                 engine.delete(record.getKey());
