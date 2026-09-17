@@ -1,0 +1,29 @@
+# Maven & Build Artifacts
+target/
+*.class
+*.jar
+!lib/junit-platform-console-standalone-1.10.2.jar
+bin/
+out/
+build/
+
+# ApexKV Runtime Data
+data/
+*.wal
+*.db
+*.idx
+*.tmp
+
+# IDE & Editor Configs
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+.DS_Store
+
+# Logs
+*.log
