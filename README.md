@@ -5,9 +5,9 @@
 [![Tests](https://img.shields.io/badge/Tests-28%20Passed%20(100%25)-success)](#test-suite--quality-assurance)
 [![License](https://img.shields.io/badge/License-Academic-blue)](#academic-metadata)
 
-> **Build Your Own Project (BYOP) — Evaluated Coursework Submission**  
+> **Project Title:** ApexKV — LSM-Tree Key-Value Storage & Stream Query Engine  
 > **Course:** CSE2006 — Programming in Java  
-> **Institution:** Vellore Institute of Technology (VIT), VITyarthi Flipped Course Evaluation  
+> **Institution:** Vellore Institute of Technology (VIT)  
 > **Student Name:** Muaviz Mushtaq Shah  
 > **Registration Number:** 24BCY10184  
 > **Faculty Name:** Dr. Adarsh Patel  
@@ -244,12 +244,12 @@ If you have Maven installed, you can also run:
 mvn clean package
 ```
 
-### 5.2 Run the Automated Test Suite
-Execute the entire JUnit 5 test suite covering all 9 test suites:
+### 5.2 Run the Test Suite
+Execute the entire JUnit 5 test suite covering all 9 test classes:
 ```bash
 ./test.sh
 ```
-*All 28 tests will execute in under 300 ms!*
+*All 28 tests will execute in under 300 ms.*
 
 ### 5.3 Launch the Interactive CLI REPL
 Start the interactive command-line shell:
@@ -503,9 +503,9 @@ Configuration: 10,000 writes, 10,000 reads, 4 concurrent worker threads
 
 ---
 
-## 9. Test Suite & Quality Assurance
+## 9. Test Suite & Verification
 
-ApexKV includes a comprehensive JUnit 5 test suite containing **28 automated tests** spanning 9 targeted test classes:
+ApexKV includes a comprehensive JUnit 5 test suite containing **28 unit and integration tests** spanning 9 targeted test classes:
 
 | Test Suite Class | Target Module | Verifications |
 | :--- | :--- | :--- |
@@ -526,15 +526,17 @@ ApexKV includes a comprehensive JUnit 5 test suite containing **28 automated tes
 
 ---
 
-## 10. Deliverables & Evaluation Compliance
+## 10. Project Structure & Deliverables
 
-All project deliverables strictly align with the requirements of **Section 5 and Section 6** of `BuildYourOwnProjectVITyarthi.pdf`:
+The repository is structured with the following key components and documentation:
 
-* `statement.md` — Formal problem statement, scope, target users, and high-level features.
-* `README.md` — Comprehensive project overview, architecture, installation, CLI manual, benchmarks, and API documentation.
-* `REPORT.md` — Comprehensive **15-section project report** matching the exact university evaluation structure (Cover Page, Architecture, Mermaid/ASCII diagrams, Implementation details, Test approach, Challenges, Learnings, References).
-* `generate_pdf_report.py` — Automated Python script to generate a formatted PDF report (`ApexKV_Project_Report_24BCY10184.pdf`).
-* `build.sh`, `run.sh`, `test.sh` — Fully executable, self-contained shell automation scripts with zero external runtime requirements.
+* `statement.md` — Problem statement, project scope, target users, and key architectural features.
+* `README.md` — Project documentation, architecture overview, setup instructions, CLI manual, and API reference.
+* `REPORT.md` — Technical project report detailing system architecture, design decisions, implementation details, benchmarks, testing, and references.
+* `ApexKV_Project_Report_24BCY10184.pdf` — Formatted PDF version of the technical project report.
+* `build.sh`, `run.sh`, `test.sh` — Shell execution scripts for building, launching the interactive REPL, and executing test suites.
+* `src/main/java/com/apexkv/` — Storage engine source code organized across 7 modular packages.
+* `src/test/java/com/apexkv/` — Unit and integration test suites.
 
 ---
 

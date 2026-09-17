@@ -1,4 +1,4 @@
-# PROJECT EVALUATION REPORT
+# Technical Project Report
 
 ## ApexKV: High-Performance Log-Structured Merge Key-Value Storage & Stream Query Engine
 
@@ -8,7 +8,7 @@
 
 * **Project Title:** ApexKV: High-Performance Log-Structured Merge Key-Value Storage & Stream Query Engine  
 * **Course Code & Title:** CSE2006 — Programming in Java  
-* **Academic Component:** Build Your Own Project (BYOP) — Flipped Course Evaluation  
+* **Academic Submission:** Final Course Project  
 * **Student Name:** Muaviz Mushtaq Shah  
 * **Registration Number:** 24BCY10184  
 * **Faculty Name:** Dr. Adarsh Patel  

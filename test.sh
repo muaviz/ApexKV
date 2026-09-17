@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "========================================================"
-echo "          ApexKV Automated Test Suite Runner            "
+echo "               ApexKV Test Suite Runner                 "
 echo "========================================================"
 
 if command -v mvn &> /dev/null; then
